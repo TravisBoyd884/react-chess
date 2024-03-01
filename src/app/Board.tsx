@@ -1,5 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
+import Image from "next/image";
 import { useWindowDimensions } from "./window";
 
 interface Tile {
@@ -19,6 +20,14 @@ for (let row = 0; row < 8; row++) {
   }
 }
 
+function Piece({ src }: { src: string }) {
+  return (
+    <div draggable>
+      <Image src={src} alt="Black_Bishop" width={500} height={500} />
+    </div>
+  );
+}
+
 export default function Board() {
   const { height, width } = useWindowDimensions();
 
@@ -29,14 +38,16 @@ export default function Board() {
           className={`grid grid-cols-8 ${width > height ? "h-3/4" : "w-3/4"} aspect-square border-[.5em] border-black border-solid`}
         >
           {board?.map((tile) => (
-            <span
+            <div
               key={`${tile.x}-${tile.y}`}
               style={{
                 backgroundColor: `${tile.color}`,
                 width: `100%`,
                 height: "100%",
               }}
-            />
+            >
+              <Piece src={"/Black-Bishop.png"} />
+            </div>
           ))}
         </div>
       </div>
