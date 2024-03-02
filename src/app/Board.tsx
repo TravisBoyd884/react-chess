@@ -1,6 +1,5 @@
 "use client";
-import React, { useRef } from "react";
-import Image from "next/image";
+import Piece from "./Piece";
 import { useWindowDimensions } from "./window";
 import classNames from "classnames";
 import NoSSR from "./NoSSR";
@@ -18,34 +17,10 @@ for (let row = 0; row < 8; row++) {
     board.push({
       x: row,
       y: col,
-      color: (row + col) % 2 === 0 ? "green" : "white",
+      color: (row + col) % 2 === 0 ? "#bda27e" : "#e4d2ba",
       startingPiece: row == 1 ? "Black-Pawn" : "White-Pawn",
     });
   }
-}
-
-function Piece({ src }: { src: string }) {
-  const pieceRef = useRef<any>(null);
-  return (
-    <div
-      draggable
-      ref={pieceRef}
-      onDragStart={() => {
-        console.log("dragging");
-        pieceRef.current.classList.add("dragging");
-      }}
-      onDragEnd={(e) => {
-        console.log("dropped");
-        const currentDiv = document.elementFromPoint(e.clientX, e.clientY);
-        console.log(currentDiv);
-        currentDiv?.appendChild(document.querySelector(".dragging")!);
-        pieceRef.current.classList.remove("dragging");
-      }}
-      className="absolute z-10 w-1/12 h-1/12"
-    >
-      <Image src={src} alt="Black_Bishop" width={720} height={720} />
-    </div>
-  );
 }
 
 export default function Board() {
@@ -67,6 +42,7 @@ export default function Board() {
             <div
               onDragOver={(e) => {
                 e.preventDefault();
+                console.log("dragging over");
               }}
               key={`${tile.x}-${tile.y}`}
               style={{
@@ -77,10 +53,13 @@ export default function Board() {
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              className="tile"
             >
               {tile.startingPiece == "Black-Pawn" ? (
                 <Piece src="/Black-Pawn.png" />
-              ) : null}
+              ) : (
+                <Piece src="/White-Pawn.png" />
+              )}
             </div>
           ))}
         </div>
